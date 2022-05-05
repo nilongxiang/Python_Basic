@@ -1,20 +1,17 @@
 #!/usr/bin/python3
 # -*- coding=utf-8 -*-
-from pymysql import *
+import pymysql
 
-
-# 创建connection连接
-conn = connect(host='192.168.151.51', port=3306, user='root', password='P@ssw0rd', database='jing_dong', charset='utf8')
-# 获得cursor对象
+# 连接数据库
+conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', password='P@ssw0rd', database='python', charset='utf8')
 cursor = conn.cursor()
 
-# 执行select语句，并返回受影响的行数，查询一条数据
-count = cursor.execute("select id,name from goods where id>=4")
+# 执行操作
+cursor.execute("select version()")
 
-for i in range(count):
-    result = cursor.fetchone()
-    print(result)
-
+# 获取执行结果
+result = cursor.fetchall()
+print(result)
 
 # 关闭cursor对象
 cursor.close()
