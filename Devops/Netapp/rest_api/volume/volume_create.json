@@ -1,0 +1,119 @@
+{
+  "files": {
+    "maximum": 0
+  },
+  "qos": {
+    "policy": {
+      "max_throughput_iops": "10000",
+      "max_throughput_mbps": "500",
+      "name": "performance",
+      "min_throughput_iops": "2000",
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    }
+  },
+  "state": "error",
+  "error_state": {},
+  "autosize": {
+    "minimum": 0,
+    "shrink_threshold": 0,
+    "maximum": 0,
+    "mode": "grow",
+    "grow_threshold": 0
+  },
+  "clone": {
+    "parent_volume": {
+      "name": "volume1",
+      "uuid": "028baa66-41bd-11e9-81d5-00a0986138f7"
+    },
+    "parent_snapshot": {
+      "name": "this_snapshot",
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    },
+    "split_initiated": true,
+    "is_flexclone": true,
+    "parent_svm": {
+      "name": "svm1",
+      "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+    }
+  },
+  "aggregates": [
+    {
+      "name": "aggr1",
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    }
+  ],
+  "name": "vol_cs_dept",
+  "type": "rw",
+  "svm": {
+    "name": "svm1",
+    "uuid": "02c9e252-41be-11e9-81d5-00a0986138f7"
+  },
+  "nas": {
+    "security_style": "unix",
+    "uid": 0,
+    "path": "/user/my_volume",
+    "export_policy": {
+      "name": "default",
+      "id": "100"
+    },
+    "unix_permissions": "0755",
+    "gid": 0
+  },
+  "quota": {},
+  "efficiency": {
+    "compression": "inline",
+    "compaction": "inline",
+    "dedupe": "inline",
+    "cross_volume_dedupe": "inline"
+  },
+  "size": 0,
+  "constituents_per_aggregate": 0,
+  "snapshot_policy": {
+    "name": "default",
+    "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+  },
+  "snaplock": {
+    "autocommit_period": "P30M",
+    "append_mode_enabled": "",
+    "privileged_delete": "enabled",
+    "retention": {
+      "minimum": "P30Y",
+      "maximum": "P30Y",
+      "default": "P30Y"
+    }
+  },
+  "language": "ar",
+  "movement": {
+    "cutover_window": "30",
+    "destination_aggregate": {
+      "name": "aggr1",
+      "uuid": "1cd8a442-86d1-11e0-ae1c-123478563412"
+    },
+    "state": "replicating"
+  },
+  "application": {},
+  "style": "flexvol",
+  "encryption": {
+    "status": {},
+    "enabled": true
+  },
+  "space": {
+    "size": 0,
+    "logical_space": {
+      "reporting": true,
+      "enforcement": true
+    },
+    "snapshot": {
+      "reserve_percent": 0
+    }
+  },
+  "tiering": {
+    "policy": "all",
+    "supported": true
+  },
+  "guarantee": {
+    "type": "volume"
+  },
+  "comment": "string",
+  "use_mirrored_aggregates": true
+}

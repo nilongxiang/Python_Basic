@@ -1,15 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding=utf-8 -*-
 import requests
-import urllib3 as ur
 import time
 import base64
 import re
-ur.disable_warnings()
+import urllib3
+urllib3.disable_warnings()
 
 
-def create_volume(mgmtip, headers_ins, volume_name, svm_name, aggr_name, volume_size, guarantee, snapshot_policy,
-                  reserve_percent):
+def create_volume(mgmtip, headers_ins, volume_name, svm_name, aggr_name, volume_size, guarantee, snapshot_policy, reserve_percent):
     v_size = int(volume_size) * 1024 * 1024  # MB -> Bytes
 
     url = f"https://{mgmtip}/api/storage/volumes"
@@ -24,9 +23,9 @@ def create_volume(mgmtip, headers_ins, volume_name, svm_name, aggr_name, volume_
         "space": {"snapshot": {"reserve_percent": reserve_percent}}
     }
     try:
-        # result = requests.post(url, headers=headers_ins, json=volume_json, verify=False)
         result = requests.post(url, auth=('admin', 'P@ssw0rd'), json=volume_json, verify=False)
         print(result)
+        print(result.json())
         time.sleep(5)
 
         if re.search('202', str(result)):
@@ -42,10 +41,9 @@ def create_volume(mgmtip, headers_ins, volume_name, svm_name, aggr_name, volume_
 
 
 if __name__ == '__main__':
-    # BASE64STRING = base64.encodebytes(('admin', 'P@ssw0rd').encode()).decode().replace('\n', '')
-    # print(BASE64STRING)
+    str_base64 = base64.b64encode(b'admin:P@ssw0rd').decode('utf-8')
     headers = {
-        'authorization': "Basic YWRtaW46UEBzc3cwcmQ=",
+        'authorization': f"Basic {str_base64}",
         'content-type': "application/json",
         'accept': "application/json"
     }
