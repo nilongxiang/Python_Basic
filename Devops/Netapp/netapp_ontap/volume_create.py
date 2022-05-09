@@ -21,7 +21,7 @@ def create_volume(
         'svm': {'name': svm_name},
         'aggregates': [{'name': aggr_name}],
         'size': v_size,
-        'guarantee': {'_schema': guarantee},
+        'guarantee': {'type': guarantee},
         "snapshot_policy": {"name": snapshot_policy},
         "space": {"snapshot": {"reserve_percent": reserve_percent}}
     })
