@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding=utf-8 -*-
+from Devops.Netapp.rest_api.netapp_storage_info import username, password, mgmt_ip
 import requests
 import pprint
 import urllib3
 urllib3.disable_warnings()
 
 
-def get_volume(mgmtip, username, password, vol_name):
+def get_volume(vol_name):
     try:
-        vol_url = f"https://{mgmtip}/api/storage/volumes"
+        vol_url = f"https://{mgmt_ip}/api/storage/volumes"
         # 获取全部 volume
         # vol_result = requests.get(vol_url, auth=(username, password), verify=False)
 
@@ -20,7 +21,7 @@ def get_volume(mgmtip, username, password, vol_name):
 
         else:
             vol_suf_url = vol_result.json()['records'][0]['_links']['self']['href']
-            vol_detail_url = f"https://{mgmtip}/{vol_suf_url}"
+            vol_detail_url = f"https://{mgmt_ip}/{vol_suf_url}"
             vol_detail_result = requests.get(vol_detail_url, auth=(username, password), verify=False)
             return vol_detail_result.json()
 
@@ -29,8 +30,8 @@ def get_volume(mgmtip, username, password, vol_name):
 
 
 if __name__ == '__main__':
-    # result = get_volume('192.168.153.101', 'admin', 'P@ssw0rd', 'vol_python')
-    result = get_volume('192.168.153.101', 'admin', 'P@ssw0rd', 'vol_python1')
+    # result = get_volume('vol_python')
+    result = get_volume('vol_python1')
     pprint.pprint(result)
 
 
