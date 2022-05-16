@@ -91,7 +91,7 @@ def append_zone(sto_name):
                             workbook2 = openpyxl.load_workbook(
                                 r'C:\Users\Andy\PycharmProjects\Python基础\MDS\DC-CBS-MDS9509-1_端口信息表1.xlsx')
                             # workbook2 = openpyxl.load_workbook(
-                            #     r'C:\Users\Andy\PycharmProjects\Python基础\MDS\DC-CBS-MDS9509-2_端口信息表1.xlsx')
+                            #     r'C:\Users\Andy\PycharmProjects\Python基础\mds\DC-CBS-MDS9509-2_端口信息表1.xlsx')
                             worksheet2 = workbook2['port']
                             for cell in worksheet2['I']:
                                 if cell.value == list_host[m]:

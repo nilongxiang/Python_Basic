@@ -13,6 +13,10 @@ cursor.execute("select version()")
 result = cursor.fetchall()
 print(result)
 
+# *.fetchone() :取一行数据
+# *.fecthmany(3) ：取三行数据
+# *.fectchall() : 取所有数据
+
 # 关闭cursor对象
 cursor.close()
 conn.close()
