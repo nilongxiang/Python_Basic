@@ -1,11 +1,13 @@
 # -*- coding=utf-8 -*-
 # !/usr/bin/env python3
 # -*- coding=utf-8 -*-
+"""该脚本需要利用到华为存储巡检日志压缩包里InspectorResult\data\config\10.5.189.107_2102351QLH9WKB800013下config.txt"""
 import pprint
 import re
 import os
 
-os.chdir(os.path.dirname(__file__))
+# print(os.path.dirname(__file__))  # 获取脚本运行路径
+# os.chdir(os.path.dirname(__file__))
 
 
 def get_model(file):
@@ -155,20 +157,22 @@ def get_license(file):
 
 if __name__ == '__main__':
     import pymysql
+
     # 连接数据库
-    conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', password='P@ssw0rd', database='python', charset='utf8')
+    conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', password='P@ssw0rd', database='python',
+                           charset='utf8')
     cursor = conn.cursor()
     cursor.execute("create table disk_kind_shelf (device varchar(40), typedisk varchar(40), size varchar(40), number int)")
     cursor.execute("create table shelf_include_contr (device varchar(40), sn varchar(40), typeshelf varchar(40))")
 
-    f = open('config_szu_lcsl.txt', 'r', encoding='utf-8')
+    f = open('config.txt', 'r', encoding='utf-8')
     print(get_model(f))
     print(get_hostname(f))
     print(get_sn(f))
     print(get_version(f))
 
     f.seek(0)
-    Model = re.search(r'Product Model:\s(\d{4})', f.read()).group(1)
+    Model = re.search(r'Product Model:\s[a-zA-Z]*(\d{4})', f.read()).group(1)
     if Model in ['5300', '5500', '5310', '5510']:
         get_one_shelf_disk(f)
         get_shelf_include_contr(f)

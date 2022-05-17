@@ -46,7 +46,6 @@ def get_disk(file):
     result = re.findall(r'(\d{2})\.(\d{1,2})\s*\:\sNETAPP\s+(X\d{3})\_\w+\s+\w+\s+\d{3,4}\.\d+\w+', file.read())
     result_disk = sorted(list(set(result)))
 
-
     # 去除磁盘 ID，将嵌套的元组转为列表
     l1 = []
     for i in result_disk:
