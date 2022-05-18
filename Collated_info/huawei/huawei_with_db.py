@@ -1,7 +1,7 @@
-# -*- coding=utf-8 -*-
 # !/usr/bin/env python3
 # -*- coding=utf-8 -*-
 """该脚本需要利用到华为存储巡检日志压缩包里InspectorResult\data\config\10.5.189.107_2102351QLH9WKB800013下config.txt"""
+
 # import pprint
 import re
 import os
