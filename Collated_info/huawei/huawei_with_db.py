@@ -2,12 +2,12 @@
 # !/usr/bin/env python3
 # -*- coding=utf-8 -*-
 """该脚本需要利用到华为存储巡检日志压缩包里InspectorResult\data\config\10.5.189.107_2102351QLH9WKB800013下config.txt"""
-import pprint
+# import pprint
 import re
 import os
 
-# print(os.path.dirname(__file__))  # 获取脚本运行路径
-# os.chdir(os.path.dirname(__file__))
+print(os.path.dirname(__file__))  # 获取脚本运行路径
+os.chdir(os.path.dirname(__file__))
 
 
 def get_model(file):
@@ -119,16 +119,16 @@ def get_shelf_include_contr(file):
 
     # 写入数据库
     for kind in contr_list:
-        device = kind[0]
+        device1 = kind[0]
         sn = kind[1]
         typeshelf = kind[2]
-        cursor.execute(f"insert into shelf_include_contr values ('{device}', '{sn}', '{typeshelf}')")
+        cursor.execute(f"insert into shelf_include_contr values ('{device1}', '{sn}', '{typeshelf}')")
 
     for kind in shelf_list:
-        device = kind[0]
+        device2 = kind[0]
         sn = kind[1]
         typeshelf = kind[2]
-        cursor.execute(f"insert into shelf_include_contr values ('{device}', '{sn}', '{typeshelf}')")
+        cursor.execute(f"insert into shelf_include_contr values ('{device2}', '{sn}', '{typeshelf}')")
 
 
 def get_shelf_exclude_contr(file):
@@ -143,10 +143,10 @@ def get_shelf_exclude_contr(file):
 
     # 写入数据库
     for kind in shelf_list:
-        device = kind[0]
+        device3 = kind[0]
         sn = kind[1]
         typeshelf = kind[2]
-        cursor.execute(f"insert into shelf_include_contr values ('{device}', '{sn}', '{typeshelf}')")
+        cursor.execute(f"insert into shelf_include_contr values ('{device3}', '{sn}', '{typeshelf}')")
 
 
 def get_license(file):
@@ -157,7 +157,6 @@ def get_license(file):
 
 if __name__ == '__main__':
     import pymysql
-
     # 连接数据库
     conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', password='P@ssw0rd', database='python',
                            charset='utf8')
@@ -195,7 +194,7 @@ if __name__ == '__main__':
         for j in response2:
             s1 += f'{j[0]:<6} {j[2]:<10} ({j[1]}), '
             # 获取硬盘信息
-            cursor.execute("select * from disk_kind_shelf where device=%s", i[0])
+            cursor.execute("select * from disk_kind_shelf where device=%s", j[0])
             response3 = cursor.fetchall()
             for k in response3:
                 if response3.index(k) == len(response3) - 1:

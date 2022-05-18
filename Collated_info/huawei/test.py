@@ -23,10 +23,14 @@ import re
 # #     print(i)
 # #     l1[i] = l1
 
-f = open('config_hfe_yx.txt', 'r', encoding='utf-8')
-Model = re.search(r'Product Model:\s(\d{4})', f.read()).group(1)
+# f = open('config_hfe_yx.txt', 'r', encoding='utf-8')
+# Model = re.search(r'Product Model:\s(\d{4})', f.read()).group(1)
 
-print(Model)
+# print(Model)
 if __name__ == '__main__':
     pass
     print("=" * 15 + ' result ' + "=" * 15)
+    l1 = [(1, 2, 3), (4, 5, 6)]
+    l2 = []
+    [l2.append(list(i)) for i in l1]
+    print(l2)
