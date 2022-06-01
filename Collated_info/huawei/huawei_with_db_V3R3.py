@@ -2,7 +2,7 @@
 # -*- coding=utf-8 -*-
 """
 该脚本需要利用到华为存储巡检日志压缩包里InspectorResult\data\config\10.5.189.107_2102351QLH9WKB800013下config.txt
-支持设备： V3R6 & V5R7 & Dorado V3 V6 (除Dorado 5000V3) & 5500K
+支持设备： V3R3 & 2600 V3R6 & Dorado 5000V3
 """
 
 import pprint
@@ -115,8 +115,10 @@ def get_disk_kind_for_shelf(file):
 
 def get_contr(file):
     """输出shelf信息表到数据库中"""
+    result = get_model(file)
+
     file.seek(0)
-    contr_all = re.findall(r'Enclosure ID:\s(CTE\d).{1,10}Logic Type: Engine.*?SN:\s(\w{20}).*?OceanStor (\w{0,6}\s?\d{4}\w?\s\w{2})', file.read(), re.S)
+    contr_all = re.findall(r'Enclosure ID:\s(CTE\d).{0,10}Logic Type:.*?SN:\s(\w{20})', file.read(), re.S)
     contr_list = list(set(contr_all))
     # pprint.pprint(contr_list)
 
@@ -124,14 +126,14 @@ def get_contr(file):
     for kind in contr_list:
         device1 = kind[0]
         sn = kind[1]
-        typeshelf = kind[2]
+        typeshelf = result
         cursor.execute(f"insert into shelf_include_contr values ('{device1}', '{sn}', '{typeshelf}')")
 
 
 def get_shelf(file):
     """输出shelf信息表到数据库中"""
     file.seek(0)
-    shelf_all = re.findall(r'Enclosure ID:\s(DAE\d{3}).{1,10}Logic Type: Expansion Enclosure.*?SN: (\w{20}).*?Disk Units?\S(DAE\w{7}\-?\d{0,2})', file.read(), re.S)
+    shelf_all = re.findall(r'Enclosure ID:\s(DAE\d{3}).{1,10}?Logic Type:.*?SN: (\w{20})', file.read(), re.S)
     shelf_list = list(set(shelf_all))
     # pprint.pprint(shelf_list)
 
@@ -139,7 +141,7 @@ def get_shelf(file):
     for kind in shelf_list:
         device3 = kind[0]
         sn = kind[1]
-        typeshelf = kind[2]
+        typeshelf = 'DAE22525U2'
         cursor.execute(f"insert into shelf_include_contr values ('{device3}', '{sn}', '{typeshelf}')")
 
 
@@ -152,16 +154,17 @@ def get_license(file):
 if __name__ == '__main__':
     import pymysql
     # 连接数据库
-    conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', password='P@ssw0rd', database='python', charset='utf8')
+    conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', password='P@ssw0rd', database='python',
+                           charset='utf8')
     cursor = conn.cursor()
 
     for i in os.scandir(r'/PyCharmProject/Collated_info/huawei/'):
         if i.name.endswith('.txt') or i.name.endswith('.log'):
-            f = open(i.name, 'r', encoding='utf-8', errors='ignore')
             cursor.execute(
                 "create table disk_kind_shelf (device varchar(40), typedisk varchar(40), size varchar(40), number int)")
             cursor.execute(
                 "create table shelf_include_contr (device varchar(40), sn varchar(40), typeshelf varchar(40))")
+            f = open(i.name, 'r', encoding='utf-8', errors='ignore')
             print(get_model(f))
             print(get_hostname(f))
             print(get_sn(f))
@@ -171,7 +174,7 @@ if __name__ == '__main__':
             Model = re.search(r'Product Model:\s{1,2}(.*)', f.read()).group(1)
             Model = re.search(r'(\d{4,5})', Model).group(1)
             # print(Model)
-            if Model in ['5000', '5300', '5500', '5310', '5510']:
+            if Model in ['2600', '5000', '5300', '5500', '5310', '5510']:
                 get_disk_kind_for_shelf(f)
                 get_contr(f)
                 get_shelf(f)

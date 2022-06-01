@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # -*- coding=utf-8 -*-
-name_list = ["张三", "李四", "王五", "王小二"]
+l1 = ["zhangsan", "lisi", "wangwu"]
 
 # 使用迭代遍历列表
 """
@@ -10,5 +10,17 @@ my_name 这个变量中，在循环体内部可以访问到当前这一次获取
 for my_name in 列表变量:
     print("我的名字叫 %s" % 列表变量)
 """
-for my_name in name_list:
-    print("我的名字叫 %s" % my_name)
+for i in l1:
+    print(l1.index(i))
+    print(i)
+
+for i in range(len(l1)):
+    print(i)
+    print(l1[i])
+
+for i, j in enumerate(l1):
+    print(i)
+    print(j)
+
+print(l1)
+print("=" * 15 + ' result ' + "=" * 15)

@@ -43,8 +43,8 @@ def get_description(txt):
     获取show running-config输出信息
     :param txt: 原始log name
     """
-    keyStart = '`show running-config`'
-    keyEnd = '`show startup-config`'
+    keyStart = '`show running-config.txt`'
+    keyEnd = '`show startup-config.txt`'
     pat = re.compile(keyStart + '(.*?)' + keyEnd, re.S)
     # 文件指针回到开始
     txt.seek(0)
