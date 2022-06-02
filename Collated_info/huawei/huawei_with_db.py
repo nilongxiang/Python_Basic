@@ -90,9 +90,9 @@ def get_disk(file):
 
 
 def get_disk_kind_for_shelf(file):
-    """输出shelf中disk信息到数据库中"""
     result = get_disk(file)
     # pprint.pprint(result)
+
     # 删除编码，以便于去重，计算['CTE0', 'SSD', '600GB']出现个数
     for i in result:
         i.pop(2)
@@ -102,45 +102,27 @@ def get_disk_kind_for_shelf(file):
     for i in disk_kind_withshelf:
         num = result.count(i)
         i.append(num)
-    # print(disk_kind_withshelf)
 
-    # 写入数据库
-    for kind in disk_kind_withshelf:
-        device = kind[0]
-        typedisk = kind[1]
-        size = kind[2]
-        num = kind[3]
-        cursor.execute(f"insert into disk_kind_shelf values ('{device}', '{typedisk}', '{size}', {num})")
+    # print(disk_kind_withshelf)
+    return disk_kind_withshelf
 
 
 def get_contr(file):
-    """输出shelf信息表到数据库中"""
     file.seek(0)
     contr_all = re.findall(r'Enclosure ID:\s(CTE\d).{1,10}Logic Type: Engine.*?SN:\s(\w{20}).*?OceanStor (\w{0,6}\s?\d{4}\w?\s\w{2})', file.read(), re.S)
     contr_list = list(set(contr_all))
-    # pprint.pprint(contr_list)
 
-    # 写入数据库
-    for kind in contr_list:
-        device1 = kind[0]
-        sn = kind[1]
-        typeshelf = kind[2]
-        cursor.execute(f"insert into shelf_include_contr values ('{device1}', '{sn}', '{typeshelf}')")
+    # pprint.pprint(contr_list)
+    return contr_list
 
 
 def get_shelf(file):
-    """输出shelf信息表到数据库中"""
     file.seek(0)
     shelf_all = re.findall(r'Enclosure ID:\s(DAE\d{3}).{1,10}Logic Type: Expansion Enclosure.*?SN: (\w{20}).*?Disk Units?\S(DAE\w{7}\-?\d{0,2})', file.read(), re.S)
     shelf_list = list(set(shelf_all))
-    # pprint.pprint(shelf_list)
 
-    # 写入数据库
-    for kind in shelf_list:
-        device3 = kind[0]
-        sn = kind[1]
-        typeshelf = kind[2]
-        cursor.execute(f"insert into shelf_include_contr values ('{device3}', '{sn}', '{typeshelf}')")
+    # pprint.pprint(shelf_list)
+    return shelf_list
 
 
 def get_license(file):
@@ -162,22 +144,51 @@ if __name__ == '__main__':
                 "create table disk_kind_shelf (device varchar(40), typedisk varchar(40), size varchar(40), number int)")
             cursor.execute(
                 "create table shelf_include_contr (device varchar(40), sn varchar(40), typeshelf varchar(40))")
+
             print(get_model(f))
             print(get_hostname(f))
             print(get_sn(f))
             print(get_version(f))
+
+            # 获取shelf 和 disk 详细信息
+            result_disk_kind_list = get_disk_kind_for_shelf(f)
+            # 写入数据库
+            for kind in result_disk_kind_list:
+                device = kind[0]
+                typedisk = kind[1]
+                size = kind[2]
+                num = kind[3]
+                cursor.execute(f"insert into disk_kind_shelf values ('{device}', '{typedisk}', '{size}', {num})")
 
             f.seek(0)
             Model = re.search(r'Product Model:\s{1,2}(.*)', f.read()).group(1)
             Model = re.search(r'(\d{4,5})', Model).group(1)
             # print(Model)
             if Model in ['5000', '5300', '5500', '5310', '5510']:
-                get_disk_kind_for_shelf(f)
-                get_contr(f)
-                get_shelf(f)
+
+                result_contr_list = get_contr(f)
+                # 写入数据库
+                for kind in result_contr_list:
+                    device1 = kind[0]
+                    sn = kind[1]
+                    typeshelf = kind[2]
+                    cursor.execute(f"insert into shelf_include_contr values ('{device1}', '{sn}', '{typeshelf}')")
+
+                result_shelf_list = get_shelf(f)
+                # 写入数据库
+                for kind in result_shelf_list:
+                    device3 = kind[0]
+                    sn = kind[1]
+                    typeshelf = kind[2]
+                    cursor.execute(f"insert into shelf_include_contr values ('{device3}', '{sn}', '{typeshelf}')")
             else:
-                get_disk_kind_for_shelf(f)
-                get_shelf(f)
+                result_shelf_list = get_shelf(f)
+                # 写入数据库
+                for kind in result_shelf_list:
+                    device3 = kind[0]
+                    sn = kind[1]
+                    typeshelf = kind[2]
+                    cursor.execute(f"insert into shelf_include_contr values ('{device3}', '{sn}', '{typeshelf}')")
 
             # 根据数据库中表，输出shelf 和 disk信息
             # 获取device
@@ -209,6 +220,7 @@ if __name__ == '__main__':
             # 输出license信息
             license2 = get_license(f)
             print("、".join(license2))
+
             f.close()
             print('=' * 100)
             print()
